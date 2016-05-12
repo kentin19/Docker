@@ -38,7 +38,7 @@ Voilà ce que nous allons faire :
 
 ![Alt Tag](https://github.com/kentin19/Docker/raw/master/ressource/img1.png)
 
-#####NB: Un changement majeur a eu lieu, un seul noeud est désormais démarré !
+#####N. B. Un changement majeur a eu lieu, un seul noeud est désormais démarré !
 
 1) Démarrer tous les conteneurs à l'aide de cette commande :
 
@@ -48,29 +48,29 @@ Voilà ce que nous allons faire :
 
 	docker-machine ip default
 
-Vous pouvez tester si cela fonctionne en rentrant l'adresse IP dans votre navigateur internet. "This page has been viewed 1 times!" doit apparaitre. Vous pouvez tester les performances de cette configuration à l'aide d'Apache Benchmark
+Vous pouvez tester si cela fonctionne en rentrant l'adresse IP dans votre navigateur internet. "This page has been viewed 1 times!" doit apparaitre. Vous pouvez tester les performances de cette configuration à l'aide d'Apache Benchmark.
 
 Benchmark
 ---------
 
 ###Apache Benchmark
 
-Une première façon de tester les performances des conteneurs est d'utiliser Apache Benchmark (AB pour les intimes). Cependant, nous avons rencontré des incompatibilitées entre OSX, AB et l'allocation dynamique des ressources. Nous proposons une deuxième façon d'effectuer les tests en dessous.
+Une première façon de tester les performances des conteneurs est d'utiliser Apache Benchmark (AB pour les intimes). Cependant, nous avons rencontré des incompatibilités entre OSX, AB et l'allocation dynamique des ressources. Nous proposons une deuxième façon d'effectuer les tests en dessous.
 
-S'il n'est pas déjà installé, suivez cette procèdure :
+S'il n'est pas déjà installé, suivez cette procédure :
 
 	apt-get update
 	apt-get install apache2-utils
 
-Une fois AB installé, vous pouvez lancer le benchmark :
+Une fois AB installée, vous pouvez lancer le benchmark :
 	
 	ab -r -n {nb total de requêtes} -c {nb de requêtes simultanées} http://{adresse ip}:80/
 
-Suivant les capacité de votre ordinateur, les performances sont bonnes jusqu'à n requêtes simultanées. Si plus de requêtes sont lancées simultanément, alors les performances baissent grandement. Il faut utiliser la scalabilité.
+Suivant les capacités de votre ordinateur, les performances sont bonnes jusqu'à n requêtes simultanées. Si plus de requêtes sont lancées simultanément, alors les performances baissent grandement. Il faut utiliser la scalabilité.
 
 ###Siege Benchmark
 
-Siege benchmark fonctionne de la même façon que AB. Voici comment l'installer sous OSX.
+Siege benchmark fonctionne de la même façon qu’AB. Voici comment l'installer sous OSX.
 
 Ouvrir le terminal et récupérer la dernière version :
 
@@ -90,7 +90,7 @@ Configurer, puis installer siege :
 	make
 	sudo make install
 
-Siege a été installé dans /usr/local/bin/. Pour vérifier qu'il est bien installer, faites :
+Siege a été installé dans /usr/local/bin/. Pour vérifier qu'il est bien installé, faites :
 
 	siege
 
@@ -112,12 +112,12 @@ Le fichier ressemble à ça:
 
 ####Qu'est ce qu'il se passe dans un noeud ?
 
-Des calculs (multiplications et transpositions) de grandes matrices (2000x2000) générées aléatoirements sont effectués à chaque requête. La charge porte ensentiellement sur le processeur, moins de 100mo de RAM par noeud sont nécessaires. 
+Des calculs (multiplications et transpositions) de grandes matrices (2000x2000) générées aléatoirement sont effectués à chaque requête. La charge porte essentiellement sur le processeur, moins de 100mo de RAM par noeud sont nécessaires. 
 
 Scalabilité
 -----------
 
-Le principe est assez simple, on souhaite avoir des performances optimales sans gaspiller de ressources. Quand l'application est au repos (i.e. sans requêtes), on laisse tourner un seul conteneur. Quand la charge augmente (i.e. le nombre de requêtes simultanées augmente) on démarre suffisament de conteneurs pour couvrir la charge.
+Le principe est assez simple, on souhaite avoir des performances optimales sans gaspiller de ressources. Quand l'application est au repos (c.-à-d. sans requêtes), on laisse tourner un seul conteneur. Quand la charge augmente (c.-à-d. le nombre de requêtes simultanées augmente), on démarre suffisamment de conteneurs pour couvrir la charge.
 
 ![Alt Tag](https://github.com/kentin19/Docker/raw/master/ressource/img2.png)
 
@@ -126,18 +126,25 @@ Le principe est assez simple, on souhaite avoir des performances optimales sans 
 
 Dans un premier temps, nous allons allouer de nouveaux conteneurs manuellement.
 
-Il existe un commande crée par Docker:
+Il existe une commande créée par Docker:
 	
 	docker-compose scale node = {nb total de noeuds}
 
-Pour l'instant, les noeuds ne sont pas reconnus pas Nginx...
-#####A Venir
+Cependant, il faut ajouter les nouveaux noeuds à la configuration de nginx pour qu'il redirige les requêtes vers eux. Nous avons crée deux script bash (add.sh et remove.sh) qui modifie en plus la configration du load balancer. 
+Pour ajouter un noeud, il suffit de faire : 
+	
+	./add.sh
 
+Et pour supprimer un noeud : 
+
+	./remove.sh
 
 ###Automatique
 
-#####A Venir
+Afin d'avoir un allocation des ressources dynamique, il est nécessaire d'automatiser l'ajout et la suppréssion de conteneurs. Nous avons fait cela avec auto.sh. Nous avons fait le choix de limiter la charge CPU de chaque noeud à 60%. Quand la charge dépasse 50%, le script ajoute un noeud. Si la charge diminue en dessous de 20% (et qu'il y a plus d'un noeud), auto.sh supprime un noeud.
+Pour lancer le script, il suffit de faire : 
 
+	./auto.sh
 
 Quitter proprement Compose
 --------------------------
