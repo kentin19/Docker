@@ -53,7 +53,11 @@ Vous pouvez tester si cela fonctionne en rentrant l'adresse IP dans votre naviga
 Benchmark
 ---------
 
-Pour tester les performances des conteneurs, nous allons utiliser Apache Benchmark (AB pour les intimes). S'il n'est pas déjà installé, suivez cette procèdure :
+###Apache Benchmark
+
+Une première façon de tester les performances des conteneurs est d'utiliser Apache Benchmark (AB pour les intimes). Cependant, nous avons rencontré des incompatibilitées entre OSX, AB et l'allocation dynamique des ressources. Nous proposons une deuxième façon d'effectuer les tests en dessous.
+
+S'il n'est pas déjà installé, suivez cette procèdure :
 
 	apt-get update
 	apt-get install apache2-utils
@@ -75,6 +79,36 @@ Le fichier ressemble à ça:
 
 	CONTAINER	CPU %		MEM USAGE/LIMIT		MEM %		NET I/O
 	e64a279663	0.00%		7.227 MiB/987.9 MiB	0.73%		936 B/468 B
+
+###Siege Benchmark
+
+Siege benchmark fonctionne de la même façon que AB. Voici comment l'installer sous OSX.
+
+Ouvrir le terminal et récupérer la dernière version :
+
+	curl -C - -O http://download.joedog.org/siege/siege-latest.tar.gz
+
+Extraire l'archive .tar :
+
+	tar -xvf siege-latest.tar.gz
+
+Se placer dans le dossier que vous venez d'extraire :
+
+	cd siege-{version}/
+
+Configurer, puis installer siege :
+
+	./configure
+	make
+	sudo make install
+
+Siege a été installé dans /usr/local/bin/. Pour vérifier qu'il est bien installer, faites :
+
+	siege
+
+Voici une requête de base: 
+
+	siege -c {nb de requêtes simultanées} -r {nb total de requêtes} http://{adresse ip}:80/
 
 ####Qu'est ce qu'il se passe dans un noeud ?
 

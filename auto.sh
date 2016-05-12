@@ -27,16 +27,16 @@ if [ $compteur -gt 1 ]
 	if [ $usage -lt 20 ]
 		then
 	./remove.sh
-	sleep 5
+	sleep 2
 	fi
 fi
 #Si la charge est supérieure à 60%, alors on ajoute un noeud
-if [ $usage -gt 60 ]
+if [ $usage -gt 50 ]
 	then
 	./add.sh
-	sleep 10
+	sleep 2
 fi
 
 #On attend pour ne pas boucler trop vite et ralentir la machine
-sleep 2
+sleep 1
 done
