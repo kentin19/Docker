@@ -68,18 +68,6 @@ Une fois AB installé, vous pouvez lancer le benchmark :
 
 Suivant les capacité de votre ordinateur, les performances sont bonnes jusqu'à n requêtes simultanées. Si plus de requêtes sont lancées simultanément, alors les performances baissent grandement. Il faut utiliser la scalabilité.
 
-####Comment avoir une idée de la charge de travail d'un conteneur ?
-
-Il est possible de créer un log pour chaque conteneur comme ceci :
-	
-	docker ps
-	docker stats {id conteneur} > log.txt
-	
-Le fichier ressemble à ça:
-
-	CONTAINER	CPU %		MEM USAGE/LIMIT		MEM %		NET I/O
-	e64a279663	0.00%		7.227 MiB/987.9 MiB	0.73%		936 B/468 B
-
 ###Siege Benchmark
 
 Siege benchmark fonctionne de la même façon que AB. Voici comment l'installer sous OSX.
@@ -109,6 +97,18 @@ Siege a été installé dans /usr/local/bin/. Pour vérifier qu'il est bien inst
 Voici une requête de base: 
 
 	siege -c {nb de requêtes simultanées} -r {nb total de requêtes} http://{adresse ip}:80/
+
+####Comment avoir une idée de la charge de travail d'un conteneur ?
+
+Il est possible de créer un log pour chaque conteneur comme ceci :
+	
+	docker ps
+	docker stats {id conteneur} > log.txt
+	
+Le fichier ressemble à ça:
+
+	CONTAINER	CPU %		MEM USAGE/LIMIT		MEM %		NET I/O
+	e64a279663	0.00%		7.227 MiB/987.9 MiB	0.73%		936 B/468 B
 
 ####Qu'est ce qu'il se passe dans un noeud ?
 
