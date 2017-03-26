@@ -18,7 +18,7 @@ Installation
 
 	cd $(chemin du dossier Docker)
 
-#####Docker-machine n'est peut-être pas configuré !
+##### Docker-machine n'est peut-être pas configuré !
 
 Un test simple existe pour le vérifier:
 
@@ -38,7 +38,7 @@ Voilà ce que nous allons faire :
 
 ![Alt Tag](https://github.com/kentin19/Docker/raw/master/ressource/img1.png)
 
-#####N. B. Un changement majeur a eu lieu, un seul noeud est désormais démarré !
+##### N. B. Un changement majeur a eu lieu, un seul noeud est désormais démarré !
 
 1) Démarrer tous les conteneurs à l'aide de cette commande :
 
@@ -53,7 +53,7 @@ Vous pouvez tester si cela fonctionne en rentrant l'adresse IP dans votre naviga
 Benchmark
 ---------
 
-###Apache Benchmark
+### Apache Benchmark
 
 Une première façon de tester les performances des conteneurs est d'utiliser Apache Benchmark (AB pour les intimes). Cependant, nous avons rencontré des incompatibilités entre OSX, AB et l'allocation dynamique des ressources. Nous proposons une deuxième façon d'effectuer les tests en dessous.
 
@@ -68,7 +68,7 @@ Une fois AB installée, vous pouvez lancer le benchmark :
 
 Suivant les capacités de votre ordinateur, les performances sont bonnes jusqu'à n requêtes simultanées. Si plus de requêtes sont lancées simultanément, alors les performances baissent grandement. Il faut utiliser la scalabilité.
 
-###Siege Benchmark
+### Siege Benchmark
 
 Siege benchmark fonctionne de la même façon qu’AB. Voici comment l'installer sous OSX.
 
@@ -98,7 +98,7 @@ Voici une requête de base:
 
 	siege -c {nb de requêtes simultanées} -r {nb total de requêtes} http://{adresse ip}:80/
 
-####Comment avoir une idée de la charge de travail d'un conteneur ?
+#### Comment avoir une idée de la charge de travail d'un conteneur ?
 
 Il est possible de créer un log pour chaque conteneur comme ceci :
 	
@@ -110,7 +110,7 @@ Le fichier ressemble à ça:
 	CONTAINER	CPU %		MEM USAGE/LIMIT		MEM %		NET I/O
 	e64a279663	0.00%		7.227 MiB/987.9 MiB	0.73%		936 B/468 B
 
-####Qu'est ce qu'il se passe dans un noeud ?
+#### Qu'est ce qu'il se passe dans un noeud ?
 
 Des calculs (multiplications et transpositions) de grandes matrices (2000x2000) générées aléatoirement sont effectués à chaque requête. La charge porte essentiellement sur le processeur, moins de 100mo de RAM par noeud sont nécessaires. 
 
@@ -122,7 +122,7 @@ Le principe est assez simple, on souhaite avoir des performances optimales sans 
 ![Alt Tag](https://github.com/kentin19/Docker/raw/master/ressource/img2.png)
 
 
-###Manuel
+### Manuel
 
 Dans un premier temps, nous allons allouer de nouveaux conteneurs manuellement.
 
@@ -139,7 +139,7 @@ Et pour supprimer un noeud :
 
 	./remove.sh
 
-###Automatique
+### Automatique
 
 Afin d'avoir un allocation des ressources dynamique, il est nécessaire d'automatiser l'ajout et la suppréssion de conteneurs. Nous avons fait cela avec auto.sh. Nous avons fait le choix de limiter la charge CPU de chaque noeud à 60%. Quand la charge dépasse 50%, le script ajoute un noeud. Si la charge diminue en dessous de 20% (et qu'il y a plus d'un noeud), auto.sh supprime un noeud.
 Pour lancer le script, il suffit de faire : 
